@@ -4,6 +4,7 @@
  */
 package baseDeDados;
 
+import java.awt.HeadlessException;
 import javax.swing.JOptionPane;
 
 /**
@@ -15,7 +16,7 @@ public class TestarConexao {
         try{
             new conexao().pegarConexao();
             JOptionPane.showMessageDialog(null, "Conectado com sucesso");
-        }catch(Exception erro){
+        }catch(HeadlessException erro){
             JOptionPane.showMessageDialog(null, "Erro ao conectar"+ erro.getMessage());
         }
     }

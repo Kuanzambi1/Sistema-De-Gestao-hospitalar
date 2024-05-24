@@ -3,9 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Emanuel%20Kuanzambi/Documents/NetBeansProjects/Sistema_de_Gestao_Hospitalar/src/classes/Factura.java</file>
-            <file>file:/C:/Users/Emanuel%20Kuanzambi/Documents/NetBeansProjects/Sistema_de_Gestao_Hospitalar/src/baseDeDados/conexao.java</file>
-            <file>file:/C:/Users/Emanuel%20Kuanzambi/Documents/NetBeansProjects/Sistema_de_Gestao_Hospitalar/src/baseDeDados/TestarConexao.java</file>
+            <file>file:/C:/Users/Emanuel%20Kuanzambi/Documents/NetBeansProjects/Sistema_de_Gestao_Hospitalar/src/classes/Pessoa.java</file>
+            <file>file:/C:/Users/Emanuel%20Kuanzambi/Documents/NetBeansProjects/Sistema_de_Gestao_Hospitalar/src/telas/Home.java</file>
+            <file>file:/C:/Users/Emanuel%20Kuanzambi/Documents/NetBeansProjects/Sistema_de_Gestao_Hospitalar/src/telas/Cadastro_de_paciente.java</file>
+            <file>file:/C:/Users/Emanuel%20Kuanzambi/Documents/NetBeansProjects/Sistema_de_Gestao_Hospitalar/src/classes/Paciente.java</file>
         </group>
     </open-files>
 </project-private>
