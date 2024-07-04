@@ -5,25 +5,41 @@
 package classes;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Date;
 /**
  *
  * @author Emanuel Kuanzambi
  */
 public class Factura {
-    private int idFactura;
-    private Paciente paciente;
-    private BigDecimal valor;
-    private LocalDate dataDeEmissao;
-    
-    public boolean emitirFactura(Paciente paciente, BigDecimal valor, LocalDate dataEmissao){
-        return true;
+    private String paciente;
+    private float valor;
+    private Date dataDeEmissao;
+
+    public String getPaciente() {
+        return paciente;
     }
-    public boolean calcularTotalFacturas(LocalDate dataInicio, LocalDate dataFim){
-        return true;
+
+    public void setPaciente(String paciente) {
+        this.paciente = paciente;
     }
-    public BigDecimal pagarFactura(LocalDate inicio, LocalDate fim){
+
+    public float getValor() {
         return valor;
     }
+
+    public void setValor(float valor) {
+        this.valor = valor;
+    }
+
+    public Date getDataDeEmissao() {
+        return new Date();
+    }
+
+    public void setDataDeEmissao(Date dataDeEmissao) {
+        this.dataDeEmissao = dataDeEmissao;
+    }
+    
+   
     
     
 }

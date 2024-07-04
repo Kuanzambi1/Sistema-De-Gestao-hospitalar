@@ -27,7 +27,8 @@ public class Cconsulta {
     }
     public void salvar(Consulta c){
         String dia="";String dayOfWeekStr="";
-            Date diaSelecionado = c.getDataDaConsulta();
+            
+        Date diaSelecionado = c.getDataDaConsulta();
               if (diaSelecionado != null) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(diaSelecionado);
