@@ -8,7 +8,5 @@ import java.time.LocalDate;
 public class Secretaria extends Funcionario{
     private int idSecretaria;
     private LocalDate horarioDeTrabalho;
-    public Secretaria(){
-        super("Secretára");
-    }
+    
 }

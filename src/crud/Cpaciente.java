@@ -21,7 +21,29 @@ public class Cpaciente {
     public Cpaciente(){
         this.conn = new conexao().pegarConexao();
     }
-    
+     public void editar(Paciente p){
+        try{
+            String sql ="UPDATE  paciente SET nome=?,data_de_nascimento=?,genero=?,peso=?,altura=?,numero_bi=?,numero_do_telefone=?,endereco=? WHERE codigo =?";
+            
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1,p.getNome());
+            stmt.setString(2,String.valueOf(p.getNascimento()));
+            stmt.setString(3, p.getGenero());
+            stmt.setFloat(4,p.getPeso());
+            stmt.setFloat(5,p.getAltura());
+            stmt.setString(6,p.getBi());
+            stmt.setInt(7,p.getTelefone());
+            stmt.setString(8,p.getEndereco());
+            stmt.setInt(9, p.getIdPaciente());
+            
+            stmt.execute();
+            
+            stmt.close();
+            JOptionPane.showMessageDialog(null, "Paciente Atualisado com sucesso");
+        }catch(SQLException erro){
+            JOptionPane.showMessageDialog(null, "Erro ao atualisar paciente "+erro);
+        }
+    }
     public void salvar(Paciente p){
         try{
             String sql ="INSERT INTO paciente(nome,data_de_nascimento,genero,peso,altura,numero_bi,numero_do_telefone,endereco)"

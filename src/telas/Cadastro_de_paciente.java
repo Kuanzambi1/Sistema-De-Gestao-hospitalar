@@ -9,7 +9,7 @@ import crud.Cpaciente;
 import java.time.LocalDate;
 import javax.swing.JOptionPane;
 import utis.Util;
-import java.util.List;
+import java.util.*;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -122,7 +122,7 @@ public class Cadastro_de_paciente extends javax.swing.JFrame {
         );
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        jLabel2.setText("Código:");
+        jLabel2.setText(" ");
 
         txtID.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
 
@@ -154,7 +154,12 @@ public class Cadastro_de_paciente extends javax.swing.JFrame {
         pEditar.setBackground(new java.awt.Color(153, 153, 153));
         pEditar.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         pEditar.setForeground(new java.awt.Color(255, 255, 255));
-        pEditar.setText("Editar");
+        pEditar.setText("Atualisar");
+        pEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pEditarActionPerformed(evt);
+            }
+        });
 
         pSalvar.setBackground(new java.awt.Color(153, 153, 153));
         pSalvar.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
@@ -263,7 +268,7 @@ public class Cadastro_de_paciente extends javax.swing.JFrame {
             .addGroup(painelDadosPessoaisLayout.createSequentialGroup()
                 .addGap(65, 65, 65)
                 .addComponent(btnNovo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 106, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
                 .addComponent(pEditar)
                 .addGap(121, 121, 121)
                 .addComponent(pSalvar)
@@ -483,7 +488,7 @@ public class Cadastro_de_paciente extends javax.swing.JFrame {
     }//GEN-LAST:event_txtPesquisarActionPerformed
 
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-  Home telaPrincipal = new Home();
+  Home telaPrincipal = new Home(null);
   telaPrincipal.setVisible(true);
   this.setVisible(false);
     }//GEN-LAST:event_jToggleButton1ActionPerformed
@@ -617,6 +622,10 @@ public class Cadastro_de_paciente extends javax.swing.JFrame {
         txtTelefone.setText(tabela_paciente.getValueAt(tabela_paciente.getSelectedRow(),7).toString());
         txtEndereco.setText(tabela_paciente.getValueAt(tabela_paciente.getSelectedRow(),8).toString());
     }//GEN-LAST:event_tabela_pacienteMouseClicked
+
+    private void pEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pEditarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_pEditarActionPerformed
 
     /**
      * @param args the command line arguments

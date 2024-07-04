@@ -6,17 +6,44 @@
 
 package telas;
 
-/**
- *
- * @author Stefania
- */
+import baseDeDados.conexao;
+import classes.Consulta;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import crud.cEspecialidade;
+import java.util.List;
+import classes.Especialidade;
+import classes.Funcionario;
+import classes.Paciente;
+import crud.Cconsulta;
+import crud.Cfuncionario;
+import crud.Cpaciente;
+import java.util.*;
+
+import java.time.*;
+import javax.swing.table.DefaultTableModel;
+
+
 public class Agendar_Consulta extends javax.swing.JFrame {
 
     /**
      * Creates new form Agendar_Consulta
      */
     public Agendar_Consulta() {
+        
         initComponents();
+        vTxt.setEditable(false);
+          
+    }
+    public void listar(){
+        Cconsulta c = new Cconsulta();
+        List<Object[]> consultas = c.getConsultas();
+        DefaultTableModel dados = (DefaultTableModel) tConsulta.getModel();
+       dados.setNumRows(0);
+       for(Object[] consulta: consultas){
+           dados.addRow(consulta);
+       }
     }
 
     /**
@@ -37,32 +64,38 @@ public class Agendar_Consulta extends javax.swing.JFrame {
         jToggleButton1 = new javax.swing.JToggleButton();
         jButton1 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        comboEspecialidade = new javax.swing.JComboBox<>();
         jButton8 = new javax.swing.JButton();
         jButton9 = new javax.swing.JButton();
         jButton10 = new javax.swing.JButton();
         jLabel8 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        vTxt = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        jComboBox4 = new javax.swing.JComboBox<>();
+        comboNome = new javax.swing.JComboBox<>();
         jLabel12 = new javax.swing.JLabel();
-        jComboBox5 = new javax.swing.JComboBox<>();
+        comboMedico = new javax.swing.JComboBox<>();
         jButton2 = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        jDate = new com.toedter.calendar.JDateChooser();
+        jButton3 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jTextField9 = new javax.swing.JTextField();
         jButton6 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tConsulta = new javax.swing.JTable();
 
         jLabel2.setText("Código:");
 
         jTextField1.setText(" ");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(255, 102, 51));
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -78,8 +111,8 @@ public class Agendar_Consulta extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 778, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(233, 233, 233)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -114,10 +147,18 @@ public class Agendar_Consulta extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        comboEspecialidade.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                comboEspecialidadeAncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
+        comboEspecialidade.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                comboEspecialidadeActionPerformed(evt);
             }
         });
 
@@ -154,10 +195,10 @@ public class Agendar_Consulta extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel8.setText("Valor:");
 
-        jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        vTxt.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
+        vTxt.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                vTxtActionPerformed(evt);
             }
         });
 
@@ -167,15 +208,31 @@ public class Agendar_Consulta extends javax.swing.JFrame {
         jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel11.setText("Nome do Paciente:");
 
-        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboNome.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                comboNomeAncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel12.setText("Nome do Medico:");
 
-        jComboBox5.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox5.addActionListener(new java.awt.event.ActionListener() {
+        comboMedico.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                comboMedicoAncestorAdded(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
+        comboMedico.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox5ActionPerformed(evt);
+                comboMedicoActionPerformed(evt);
             }
         });
 
@@ -189,10 +246,12 @@ public class Agendar_Consulta extends javax.swing.JFrame {
         jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
         jLabel13.setText("Data:");
 
-        jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
-        jTextField3.addActionListener(new java.awt.event.ActionListener() {
+        jDate.setDateFormatString("y/MM/dd");
+
+        jButton3.setText("Verificar Disponibilidade do médico");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField3ActionPerformed(evt);
+                jButton3ActionPerformed(evt);
             }
         });
 
@@ -207,7 +266,7 @@ public class Agendar_Consulta extends javax.swing.JFrame {
                 .addComponent(jButton8)
                 .addGap(152, 152, 152)
                 .addComponent(jButton9)
-                .addContainerGap(205, Short.MAX_VALUE))
+                .addContainerGap(201, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -218,9 +277,9 @@ public class Agendar_Consulta extends javax.swing.JFrame {
                             .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jComboBox5, 0, 284, Short.MAX_VALUE)
-                            .addComponent(jComboBox4, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(comboMedico, 0, 284, Short.MAX_VALUE)
+                            .addComponent(comboNome, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(comboEspecialidade, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -237,13 +296,12 @@ public class Agendar_Consulta extends javax.swing.JFrame {
                             .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel8))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))))))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(vTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
+                            .addComponent(jDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton3)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -257,28 +315,29 @@ public class Agendar_Consulta extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel9)
                             .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(comboEspecialidade, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(comboNome, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(comboMedico, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addGap(19, 19, 19)))
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8))
+                    .addComponent(vTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8)
+                    .addComponent(jButton3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel13)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 125, Short.MAX_VALUE)
+                    .addComponent(jDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 127, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton8)
                     .addComponent(jButton9)
@@ -294,7 +353,7 @@ public class Agendar_Consulta extends javax.swing.JFrame {
 
         jButton6.setText("Pesquisar");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tConsulta.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -304,7 +363,7 @@ public class Agendar_Consulta extends javax.swing.JFrame {
                 "Especialidade", "Nome do Medico", "Nome do Paciente", "Valor", "Data"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tConsulta);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -344,7 +403,7 @@ public class Agendar_Consulta extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 815, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -359,7 +418,7 @@ public class Agendar_Consulta extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-  Home telaPrincipal = new Home();
+  Home telaPrincipal = new Home(null);
   telaPrincipal.setVisible(true);
   this.setVisible(false);
     }//GEN-LAST:event_jToggleButton1ActionPerformed
@@ -371,13 +430,23 @@ public class Agendar_Consulta extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-Especialidade telaEspecialidade = new Especialidade();
-  telaEspecialidade.setVisible(true);
-  this.setVisible(false);
+
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         // TODO add your handling code here:
+        Cconsulta agendar = new Cconsulta();
+        
+        Consulta con = new Consulta();
+       /* Instant instant = jDate.getDate().toInstant();
+        LocalDate data =  instant.atZone(ZoneId.systemDefault()).toLocalDate();*/
+        con.setDataDaConsulta(jDate.getDate());
+        con.setEspecialidade(String.valueOf(comboEspecialidade.getSelectedItem()));
+        con.setValor(Float.parseFloat(vTxt.getText()));
+        con.setPaciente(String.valueOf(comboNome.getSelectedItem()));
+        con.setMedico(String.valueOf(comboMedico.getSelectedItem()));
+        
+        agendar.salvar(con);
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
@@ -388,27 +457,95 @@ Especialidade telaEspecialidade = new Especialidade();
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton10ActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void vTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vTxtActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_vTxtActionPerformed
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+    private void comboEspecialidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboEspecialidadeActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+        atualizarComboMedico();
+        setPreco();
+    }//GEN-LAST:event_comboEspecialidadeActionPerformed
+    private void setPreco(){
+        cEspecialidade e = new cEspecialidade();
+        
+        String esp = String.valueOf(comboEspecialidade.getSelectedItem());
+        Float preco = e.preco(esp);
+        vTxt.setText(String.valueOf(preco));
+    }
+    private void atualizarComboMedico() {
+        Cfuncionario f = new Cfuncionario();
+
+        String especialidade = String.valueOf(comboEspecialidade.getSelectedItem());
+
+        List<Funcionario> listarN = f.filtrarMedicoPorEsp(especialidade);
+
+        comboMedico.removeAllItems(); 
+        for (Funcionario fu : listarN) {
+            comboMedico.addItem(fu.getNome());
+        }
+
+     
+    }
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        Cadastrar_Medico telaMedico = new Cadastrar_Medico();
-  telaMedico.setVisible(true);
-  this.setVisible(false);
+        Cadastrar_Funcionario telaMedico = new Cadastrar_Funcionario();
+        telaMedico.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+    private void comboMedicoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboMedicoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
+    }//GEN-LAST:event_comboMedicoActionPerformed
+    String especialidade;
+    private void comboEspecialidadeAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_comboEspecialidadeAncestorAdded
+        // TODO add your handling code here:
+         cEspecialidade esp = new cEspecialidade();
+        List<Especialidade> listarEsp = esp.listarEespecialidade();
+        
+        comboEspecialidade.removeAll();
+        
+        for(Especialidade e: listarEsp){
+            comboEspecialidade.addItem(String.valueOf(e.getNome()));
+        }
+        especialidade = String.valueOf(comboEspecialidade.getSelectedItem());
+    }//GEN-LAST:event_comboEspecialidadeAncestorAdded
 
-    private void jComboBox5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox5ActionPerformed
+    private void comboNomeAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_comboNomeAncestorAdded
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox5ActionPerformed
+        Cpaciente p = new Cpaciente();
+        List<Paciente> listarPaciente = p.Listar();
+        
+        comboNome.removeAll();
+        for(Paciente pa: listarPaciente){
+            comboNome.addItem(pa.getNome());
+        }
+    }//GEN-LAST:event_comboNomeAncestorAdded
+
+    private void comboMedicoAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_comboMedicoAncestorAdded
+        // TODO add your handling code here:
+       /* Cfuncionario f = new Cfuncionario();
+        List<Funcionario> listarN = f.filtrarMedicoPorEsp(String.valueOf(comboEspecialidade.getSelectedItem()));
+        System.out.println(especialidade);
+        comboMedico.removeAll();
+        for(Funcionario fu: listarN){
+            comboMedico.addItem(fu.getNome());
+        }*/
+    }//GEN-LAST:event_comboMedicoAncestorAdded
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        Disponibilidade_Medico d = new Disponibilidade_Medico();
+        d.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        // TODO add your handling code here:
+        listar();
+        Date today = new Date();
+        jDate.setMinSelectableDate(today);
+    }//GEN-LAST:event_formWindowActivated
 
     /**
      * @param args the command line arguments
@@ -437,26 +574,30 @@ Especialidade telaEspecialidade = new Especialidade();
         }
         //</editor-fold>
         //</editor-fold>
-
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new Agendar_Consulta().setVisible(true);
             }
         });
+       
+       
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> comboEspecialidade;
+    private javax.swing.JComboBox<String> comboMedico;
+    private javax.swing.JComboBox<String> comboNome;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox4;
-    private javax.swing.JComboBox<String> jComboBox5;
+    private com.toedter.calendar.JDateChooser jDate;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -470,11 +611,10 @@ Especialidade telaEspecialidade = new Especialidade();
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField9;
     private javax.swing.JToggleButton jToggleButton1;
+    private javax.swing.JTable tConsulta;
+    private javax.swing.JTextField vTxt;
     // End of variables declaration//GEN-END:variables
 }
